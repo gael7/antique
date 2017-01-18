@@ -22,7 +22,7 @@ var register={
       // For each one
       for (var i = 0; i < data.length; i++) {
         // Display the apropos information on the page
-          $("#registerProducts").append("<a href='#' class='btn btn-info col-lg-2' style='height:75px' id='product' data-id='"+data[i]._id+"'>"+data[i].productName+"<br>$"+data[i].productPrice+"</a>");
+          $("#registerProducts").append("<div class='col-lg-4'><a href='#' class='btn btn-info col-lg-10' style='height:75px' id='product' data-id='"+data[i]._id+"'>"+data[i].productName+"<br>$"+data[i].productPrice+"</a></div>");
         }
 
       $("#registerProducts").append("<br><br><div class='row'><a href='#' class='btn btn-info col-lg-12' id='goBackRegister'>Go Back</a></div>");
@@ -41,6 +41,7 @@ var register={
 
   createReceipt: function(table, customerName){
     //console.log("createReceipt function: "+register.receipt);
+    $("#registerCustomer").html("");
     register.receiptInfo={
       customerName: register.customerName,
       activeTable: table,
@@ -63,6 +64,8 @@ var register={
       receiptInfo={};
       $("#registerReceipt").html("");
       $("#registerTotal").html("");
+      $("#activeTables").html("");
+      register.displayActiveTables();
     } else {
       console.log("No creating receipt");
     }
@@ -87,6 +90,9 @@ var register={
     register.tableAccount=0;
     $("#registerReceipt").html("");
     $("#registerTotal").html("");
+    $("#activeTables").html("");
+    $("#updateReceipt").addClass("disabled");
+    register.displayActiveTables();
   },
 
   customerTable: function(){
@@ -119,12 +125,14 @@ var register={
       register.total=data.totalToPay;
       $("#registerTotal").html("<div class='row'><p class='col-lg-10'>Total: </p><p class='col-lg-2'>$"+register.total+"</p></div>");
     });
-    $("#registerButtons").append("<a href='#' class='btn btn-info col-lg-2' id='updateReceipt'>Update</a>");
+    $("#updateReceipt").removeClass("disabled");
   }
 };
 
-register.displayCategories();
-register.displayActiveTables();
+$(document).on("ready", function(){
+  register.displayCategories();
+  register.displayActiveTables();
+});
 
 $(document).on("click", "#readyToPay", function() {
   console.log("ready to pay");
