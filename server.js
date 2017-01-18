@@ -30,7 +30,8 @@ app.use(bodyParser.urlencoded({
 
 
 //Database configuration with mongoose
-mongoose.connect("mongodb://localhost/antique");
+//"mongodb://localhost/antique"
+mongoose.connect("mongodb://heroku_tkb9q367:47puamlbi6s6ge5hrocosore7h@ds117839.mlab.com:17839/heroku_tkb9q367");
 var db = mongoose.connection;
 
 // Show any mongoose errors
