@@ -41,6 +41,16 @@ router.get('/products/:id', function(req, res){
   });
 });
 
+router.get('/receipts', function(req, res){
+  Receipt.find({}, function(error, doc){
+    if(error){
+      console.log(error);
+    } else {
+      res.json(doc);
+    }
+  });
+});
+
 router.get('/receipts/activeTables', function(req, res){
   Receipt.find({activeTable: true}, function(error, doc){
     if(error){
