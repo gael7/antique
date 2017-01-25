@@ -18,8 +18,8 @@
 					</div>
 				</div>
 				<div class="row" id="registerButtons">
-					<a href="#" class="btn btn-info col-lg-2 col-lg-offset-1" id="createTable">Table</a>
-					<a href="#" class="btn btn-info col-lg-2 col-lg-offset-2" id="readyToPay">Pay</a>
+					<a href="#" class="btn btn-info col-lg-2 col-lg-offset-1 disabled" id="createTable">Table</a>
+					<a href="#" class="btn btn-info col-lg-2 col-lg-offset-2 disabled" id="readyToPay" data-target='#payModal' data-toggle='modal'>Pay</a>
 					<a href="#" class="btn btn-info col-lg-2 col-lg-offset-2 disabled" id="updateReceipt">Update</a>
 				</div>
 				<div class="row" id="registerCustomer">
@@ -27,5 +27,17 @@
 				</div>
 			</div>
 		</div>
+		<div class="modal fade" id="payModal" role="dialog" tabindex="-1" aria-labelledby="payLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+          </div>
+          <div class="modal-body">
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 <script src="assets/js/register.js"></script>

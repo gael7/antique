@@ -6,14 +6,15 @@ var register={
   receiptInfo: {},
   tableAccount: 0,
   receiptID: "",
+  temporalTotal: 0,
 
   displayCategories: function(){
     $("#registerProducts").html("");
     for (var i = 0; i < register.categories.length; i++) {
       // Display the apropos information on the page
         $("#registerProducts").append("<div class='row'><a href='#' class='btn btn-info col-lg-12' id='categories' data-id='"+register.categories[i]+"'>"+register.categories[i]+"</a></div><br>");
-  }
-},
+        }
+  },
 
   displayTotal: function(){
     $("#registerTotal").html("<div class='row'><p class='col-lg-10'>Total: </p><p class='col-lg-2'>$"+register.total+"</p></div>");
@@ -40,6 +41,8 @@ var register={
       register.receipt.push(product);
     });
     console.log(register.receipt);
+    $("#createTable").removeClass("disabled");
+    $("#readyToPay").removeClass("disabled");
   },
 
   duplicateProduct: function(product, isFromReceipt){
@@ -90,6 +93,8 @@ var register={
     } else {
       console.log("No creating receipt");
     }
+    $("#createTable").addClass("disabled");
+    $("#readyToPay").addClass("disabled");
   },
 
   updateReceipt: function(table){
@@ -102,9 +107,9 @@ var register={
     $.ajax({method: "POST",
     url: "/updateReceipt/"+register.receiptID,
     data: register.receiptInfo,
-  }).done(function(data){
+    }).done(function(data){
     console.log(data);
-  });
+    });
     register.total=0;
     register.receipt=[];
     receiptInfo={};
@@ -114,6 +119,8 @@ var register={
     $("#activeTables").html("");
     $("#updateReceipt").addClass("disabled");
     register.displayActiveTables();
+    $("#createTable").addClass("disabled");
+    $("#readyToPay").addClass("disabled");
   },
 
   customerTable: function(){
@@ -125,7 +132,7 @@ var register={
       $("#registerView").append("<div class='row' id='activeTables'></div>");
       for (i=0; i<data.length; i++){
       $("#activeTables").append("<div class='col-lg-2'><a href='#' class='btn btn-info col-lg-12' id='tableButtons' data-id='"+data[i]._id+"'>"+data[i].customerName+"<br>$"+data[i].totalToPay+"</a></div>");
-    }
+      }
     });
   },
 
@@ -148,11 +155,34 @@ var register={
           }
           register.receipt.push(data.productsSell[i]._id);
         }
-
       register.total=data.totalToPay;
       register.displayTotal();
     });
     $("#updateReceipt").removeClass("disabled");
+    $("#createTable").removeClass("disabled");
+    $("#readyToPay").removeClass("disabled");
+  },
+
+  modalTotal: function(){
+    register.temporalTotal=register.total;
+    $(".modal-header").empty();
+    $(".modal-body").empty();
+    $(".modal-footer").empty();
+    $(".modal-header").append("<a type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</a>");
+    $(".modal-header").append("<h4 class='modal-title'>Payment</h4>");
+    $(".modal-body").append("<div class='row' id='modalBodyTotal'></div>");
+    $("#modalBodyTotal").append("<div class='col-lg-4' id='amount'><h1>$"+register.total+"</h1></div>");
+    $("#modalBodyTotal").append("<div class='col-lg-8'><label for='payInput' class='col-lg-4 control-label'>Amount</label><div class='col-lg-6'><input id='payInput' class='form-control' type='number'></div></div>");
+    $(".modal-footer").append("<a href='#' class='btn btn-info col-lg-4' id='paymentTotal'>Pay</a><h4>Say thanks</h4>");
+  },
+
+  paymentReady: function(){
+    var usingTable=false;
+    if (register.tableAccount===0){
+    register.createReceipt(usingTable);
+    } else if (register.tableAccount===1){
+    register.updateReceipt(usingTable);
+    }
   }
 };
 
@@ -162,28 +192,19 @@ $(document).on("ready", function(){
 });
 
 $(document).on("click", "#readyToPay", function() {
-  console.log("ready to pay");
-  var usingTable=false;
-  if (register.tableAccount===0){
-  register.createReceipt(usingTable);
-} else if (register.tableAccount===1){
-  register.updateReceipt(usingTable);
-}
+  register.modalTotal();
 });
 
 $(document).on("click", "#updateReceipt", function(){
   var usingTable=true;
-  console.log("clicking to update receipt");
   register.updateReceipt(usingTable);
 });
 
 $(document).on("click", "#createTable", function() {
   var usingTable=true;
   if (register.tableAccount===0){
-    console.log("Asking for name");
     register.customerTable();
     $(document).on("click", "#openTable", function(){
-      console.log("opening table with name");
       register.customerName=$("#customerName").val();
       register.createReceipt(usingTable);
     });
@@ -204,15 +225,25 @@ $(document).on("click", "#categories", function() {
 $(document).on("click", "#removeProduct", function() {
   console.log("remove product press");
   var thisId=$(this).attr("data-id");
-  var minusTotal=$(".receiptRow").filter("[data-id='"+thisId+"']").attr("data-price");
-  $(".receiptRow").filter("[data-id='"+thisId+"']").remove();
-  console.log("minus" + minusTotal);
+  var minusProduct=$(".receiptRow").filter("[data-id='"+thisId+"']").attr("data-price");
+  var getQuantity=$(".quantityProduct").filter("[data-id='"+thisId+"']").attr("data-quantity");
+  var minusTotal=minusProduct/getQuantity;
+  var minusProductTotal=minusProduct-minusTotal;
+  var minusQuantity=getQuantity-1;
+  console.log("minus " + minusTotal);
   register.total=register.total-minusTotal;
+  if (minusQuantity===0){
+    $(".receiptRow").filter("[data-id='"+thisId+"']").remove();
+  } else {
+    $(".receiptRow").filter("[data-id='"+thisId+"']").attr("data-price", minusProductTotal);
+    $(".quantityProduct").filter("[data-id='"+thisId+"']").attr("data-quantity", minusQuantity);
+    $(".productPrice").filter("[data-id='"+thisId+"']").html("$"+minusProductTotal+"<button type='button' class='close' id='removeProduct' data-id='"+thisId+"'>&times;</button>");
+    $(".quantityProduct").filter("[data-id='"+thisId+"']").html("x "+minusQuantity);
+  }
   register.displayTotal();
   for(i=0; i<register.receipt.length; i++){
     if (register.receipt[i]===thisId){
       register.receipt.splice(i, 1);
-      console.log(register.receipt);
       break;
     }
   }
@@ -226,10 +257,27 @@ $(document).on("click", "#tableButtons", function() {
 $(document).on("click", "#product", function() {
   var thisId=$(this).attr("data-id");
   if(jQuery.inArray(thisId, register.receipt) === -1){
-    console.log("not in the array");
     register.addToReceipt(thisId);
   } else {
-    console.log("duplicate");
     register.duplicateProduct(thisId, false);
+  }
+});
+
+$(document).on("click", "#paymentTotal", function(){
+  var payment=$("#payInput").val();
+  console.log("payment: "+payment);
+  register.temporalTotal=Math.abs(register.temporalTotal-payment);
+  if(register.temporalTotal===0){
+    register.paymentReady();
+    $('#payModal').modal('hide');
+    register.temporalTotal=0;
+  } else if (register.temporalTotal<payment){
+    $("#modalBodyTotal").html("<div class='col-lg-12'><h1> Change: $"+register.temporalTotal+"</h1></div>");
+    $(".modal-footer").html("<h4>Say thanks</h4>");
+    register.temporalTotal=0;
+    register.paymentReady();
+  } else if (register.temporalTotal>payment){
+    $("#payInput").val("");
+    $("#amount").html("<h1>Remain: $"+register.temporalTotal+"</h1>");
   }
 });
