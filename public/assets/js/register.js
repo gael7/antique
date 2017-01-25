@@ -104,7 +104,7 @@ var register={
       totalToPay: register.total,
       productsSell: JSON.stringify(register.receipt)
     };
-    $.ajax({method: "POST",
+    $.ajax({method: "PUT",
     url: "/updateReceipt/"+register.receiptID,
     data: register.receiptInfo,
     }).done(function(data){
@@ -159,7 +159,7 @@ var register={
       register.displayTotal();
     });
     $("#updateReceipt").removeClass("disabled");
-    $("#createTable").removeClass("disabled");
+    $("#createTable").addClass("disabled");
     $("#readyToPay").removeClass("disabled");
   },
 

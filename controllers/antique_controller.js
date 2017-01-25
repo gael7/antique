@@ -113,7 +113,7 @@ router.post('/createReceipt', function(req, res){
   });
 });
 
-router.post('/updateReceipt/:id', function(req, res){
+router.put('/updateReceipt/:id', function(req, res){
   req.body.productsSell=JSON.parse(req.body.productsSell);
   Receipt.findOneAndUpdate({"_id": req.params.id}, {"activeTable": req.body.activeTable, "productsSell": req.body.productsSell, "totalToPay": req.body.totalToPay})
   .exec(function(err, doc){
@@ -124,4 +124,21 @@ router.post('/updateReceipt/:id', function(req, res){
     }
   });
 });
+
+router.delete('/deleteReceipt/:id', function(req, res){
+  Receipt.findByIdAndRemove({"_id": req.params.id}, function(error, doc){
+    if(error){
+      console.log(error);
+    }
+  });
+});
+
+router.delete('/deleteReceipts/', function(req, res){
+  Receipt.remove({}, function(error, doc){
+    if(error){
+      console.log(error);
+    }
+  });
+});
+
 module.exports=router;

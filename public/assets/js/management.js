@@ -10,6 +10,7 @@ var management={
     });
   },
   displayTableReceipts: function(){
+    $("#receiptsTable").html("");
     $.getJSON("/receipts", function(data) {
       console.log(data);
       // For each one
@@ -17,7 +18,7 @@ var management={
         // Display the apropos information on the page
           data[i].date=data[i].date.split("T");
           data[i].date[1]=data[i].date[1].split(".");
-          $("#receiptsTable").append("<tr><td>"+i+"</td><td>"+data[i].customerName+"</td><td>"+data[i].totalToPay+"</td><td>"+data[i].date[0]+"</td><td>"+data[i].date[1][0]+"</td></tr>");
+          $("#receiptsTable").append("<tr><td>"+i+"</td><td>"+data[i].customerName+"</td><td>"+data[i].totalToPay+"</td><td>"+data[i].date[0]+"</td><td>"+data[i].date[1][0]+"</td><td><button type='button' class='close' id='deleteReceipt' data-id='"+data[i]._id+"'>&times;</button></td></tr>");
         }
     });
   }
@@ -46,4 +47,17 @@ $(document).on("click", "#addProduct", function() {
     });
   $("#productName").val("");
   $("#productPrice").val("");
+});
+
+$(document).on("click", "#deleteReceipt", function(){
+  console.log("Is button working?");
+  var thisId=$(this).attr("data-id");
+  $.ajax({method: "DELETE", url: "deleteReceipt/"+thisId});
+  management.displayTableReceipts();
+});
+
+$(document).on("click", "#deleteReceipts", function(){
+  console.log("Deleting receipts");
+  $.ajax({method: "DELETE", url: "deleteReceipts/"});
+  management.displayTableReceipts();
 });
