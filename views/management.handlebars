@@ -42,41 +42,6 @@
 						  <a href="#" class="btn btn-info" id="addProduct">Add Product</a>
 			</div>
 		</div>
-		<div class="col-lg-6">
-			<div class="panel panel-warning">
-  				<div class="panel-heading">
-    			<h3 class="panel-title">Update Product</h3>
-  				</div>
-  				<div class="panel-body">
-								<div class="form-group">
-									<div class="row">
-      						<label for="productName" class="col-lg-2 control-label">Name</label>
-      						<div class="col-lg-8">
-        						<input type="text" class="form-control" id="productName">
-      						</div>
-								</div>
-									<div class="row">
-									<label for="productPrice" class="col-lg-2 control-label">Price</label>
-										<div class="col-lg-8">
-	    							<input type="integer" class="form-control" id="productPrice">
-										</div>
-									</div>
-									<div class="row">
-										<label for="productCategory" class="col-lg-2 control-label">Category</label>
-      							<div class="col-lg-8">
-        							<select class="form-control" id="productCategory">
-          							<option>drinks</option>
-          							<option>bakery</option>
-          							<option>pastry</option>
-          							<option>brunch</option>
-        							</select>
-										</div>
-									</div>
-								</div>
-							</div>
-						  <a href="#" class="btn btn-info" id="addProduct">Update Product</a>
-			</div>
-		</div>
 	</div>
 	<div class="row"><a href="#" class="btn btn-info" id="deleteReceipts">Delete Receipts</a></div>
 		<div class="row">
@@ -88,6 +53,8 @@
 							<th>Name</th>
 							<th>$ Price</th>
 							<th>Category</th>
+							<th>Update</th>
+							<th>Delete</th>
 						</tr>
 					</thead>
 					<tbody id="productsTable">
@@ -113,5 +80,17 @@
 				</table>
 			</div>
 		</div>
+		<div class="modal fade" id="updateProductModal" role="dialog" tabindex="-1" aria-labelledby="updateLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+          </div>
+          <div class="modal-body">
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 <script src="assets/js/management.js"></script>

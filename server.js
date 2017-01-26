@@ -6,6 +6,7 @@ var bodyParser = require("body-parser");
 var routes= require("./controllers/antique_controller.js");
 var logger = require("morgan");
 var mongoose = require("mongoose");
+var
 
 //var User = require("./models/User.js");
 //var Receipt = require("./models/Receipt.js");
@@ -32,7 +33,7 @@ app.use(bodyParser.urlencoded({
 //Database configuration with mongoose
 //"mongodb://localhost/antique"
 //"mongodb://heroku_tkb9q367:47puamlbi6s6ge5hrocosore7h@ds117839.mlab.com:17839/heroku_tkb9q367"
-mongoose.connect("mongodb://heroku_tkb9q367:47puamlbi6s6ge5hrocosore7h@ds117839.mlab.com:17839/heroku_tkb9q367");
+mongoose.connect("mongodb://localhost/antique");
 var db = mongoose.connection;
 
 // Show any mongoose errors

@@ -172,7 +172,7 @@ var register={
     $(".modal-header").append("<h4 class='modal-title'>Payment</h4>");
     $(".modal-body").append("<div class='row' id='modalBodyTotal'></div>");
     $("#modalBodyTotal").append("<div class='col-lg-4' id='amount'><h1>$"+register.total+"</h1></div>");
-    $("#modalBodyTotal").append("<div class='col-lg-8'><label for='payInput' class='col-lg-4 control-label'>Amount</label><div class='col-lg-6'><input id='payInput' class='form-control' type='number'></div></div>");
+    $("#modalBodyTotal").append("<div class='col-lg-8'><label for='payInput' class='col-lg-4 control-label'>Amount</label><div class='col-lg-6'><input id='payInput' class='form-control' type='integer'></div></div>");
     $(".modal-footer").append("<a href='#' class='btn btn-info col-lg-4' id='paymentTotal'>Pay</a><h4>Say thanks</h4>");
   },
 

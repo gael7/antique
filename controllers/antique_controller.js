@@ -3,9 +3,12 @@ var router=express.Router();
 var Product = require("../models/Product.js");
 var Receipt = require("../models/Receipt.js");
 
+//HTML routes
 router.get('/', function(req, res){
-  res.render('index');
+  res.render('login');
 });
+
+
 
 router.get('/management', function(req, res){
   res.render('management');
@@ -19,6 +22,8 @@ router.get('/register', function(req, res){
   res.render('register');
 });
 
+
+//Products Routes
 router.get('/products', function(req, res){
   Product.find({})
   .sort('-productCategory')
@@ -33,38 +38,6 @@ router.get('/products', function(req, res){
 
 router.get('/products/:id', function(req, res){
   Product.findOne({"_id": req.params.id}, function(error, doc){
-    if(error){
-      console.log(error);
-    } else {
-      res.json(doc);
-    }
-  });
-});
-
-router.get('/receipts', function(req, res){
-  Receipt.find({}, function(error, doc){
-    if(error){
-      console.log(error);
-    } else {
-      res.json(doc);
-    }
-  });
-});
-
-router.get('/receipts/activeTables', function(req, res){
-  Receipt.find({activeTable: true}, function(error, doc){
-    if(error){
-      console.log(error);
-    } else {
-      res.json(doc);
-    }
-  });
-});
-
-router.get('/receipts/activeTables/:id', function(req, res){
-  Receipt.findOne({"_id": req.params.id})
-  .populate('productsSell')
-  .exec(function(error, doc){
     if(error){
       console.log(error);
     } else {
@@ -97,6 +70,29 @@ router.post('/addProduct', function(req, res){
   });
 });
 
+router.put('/updateProduct/:id', function(req, res){
+  Product.findOneAndUpdate({"_id": req.params.id}, {"productName": req.body.productName, "productPrice": req.body.productPrice, "productCategory": req.body.productCategory})
+  .exec(function(err, doc){
+    if (err){
+      console.log(err);
+    } else {
+      res.send(doc);
+    }
+  });
+});
+
+router.delete('/deleteProduct/:id', function(req, res){
+  Product.findByIdAndRemove({"_id": req.params.id}, function(error, doc){
+    if(error){
+      console.log(error);
+    }
+  });
+});
+
+
+
+
+//Receipt Routes
 router.post('/createReceipt', function(req, res){
   //Create new receipt and pass the req.body to the entry
   req.body.productsSell=JSON.parse(req.body.productsSell);
@@ -109,6 +105,38 @@ router.post('/createReceipt', function(req, res){
       console.log(error);
     } else {
       console.log(doc);
+    }
+  });
+});
+
+router.get('/receipts', function(req, res){
+  Receipt.find({}, function(error, doc){
+    if(error){
+      console.log(error);
+    } else {
+      res.json(doc);
+    }
+  });
+});
+
+router.get('/receipts/activeTables', function(req, res){
+  Receipt.find({activeTable: true}, function(error, doc){
+    if(error){
+      console.log(error);
+    } else {
+      res.json(doc);
+    }
+  });
+});
+
+router.get('/receipts/activeTables/:id', function(req, res){
+  Receipt.findOne({"_id": req.params.id})
+  .populate('productsSell')
+  .exec(function(error, doc){
+    if(error){
+      console.log(error);
+    } else {
+      res.json(doc);
     }
   });
 });
