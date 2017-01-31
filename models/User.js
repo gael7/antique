@@ -40,7 +40,7 @@ UserSchema.methods.comparePassword = function (candidatePassword, callback) {
 };
 
 UserSchema.statics.getAuthenticated = function (user, callback) {
-    console.log('getAuthenticated', user);
+    //console.log('getAuthenticated', user);
     this.findOne({username: user.username}, function (err, doc) {
         if (err) {
             console.log(err);
