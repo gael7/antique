@@ -40,7 +40,7 @@ app.use("/", routes);
 //Database configuration with mongoose
 //"mongodb://localhost/antique"
 //"mongodb://heroku_tkb9q367:47puamlbi6s6ge5hrocosore7h@ds117839.mlab.com:17839/heroku_tkb9q367"
-mongoose.connect(config.database);
+mongoose.connect("mongodb://heroku_tkb9q367:47puamlbi6s6ge5hrocosore7h@ds117839.mlab.com:17839/heroku_tkb9q367");
 var db = mongoose.connection;
 
 // Show any mongoose errors
