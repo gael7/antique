@@ -6,11 +6,8 @@ var bodyParser = require("body-parser");
 var routes= require("./controllers/antique_controller.js");
 var logger = require("morgan");
 var mongoose = require("mongoose");
-var config = require("./config.js");
 var router = express.Router();
 var User = require("./models/User.js");
-var jwt = require("jsonwebtoken");
-var expressJwt = require('express-jwt');
 
 // Mongoose mpromise deprecated - use bluebird promises
 var Promise = require("bluebird");
