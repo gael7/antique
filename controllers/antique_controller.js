@@ -28,6 +28,7 @@ router.post('/login', function(req, res, next) {
         }
       });
 });
+
 router.get('/secret', function(req, res){
   res.render('registration');
 });
