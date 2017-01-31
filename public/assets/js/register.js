@@ -24,12 +24,12 @@ var register={
     $("#registerProducts").html("");
     for (var i = 0; i < register.categories.length; i++) {
       // Display the apropos information on the page
-        $("#registerProducts").append("<div class='col-lg-3 col-md-3 col-sm-3 col-xs-6'><a href='#' class='btn  btn-squared-default-plain btn-primary' id='categories' data-id='"+register.categories[i].name+"'><img src='/assets/images/"+register.categories[i].icon+"'><br>"+register.categories[i].name+"</a></div>");
+        $("#registerProducts").append("<div class='col-lg-3 col-md-3 col-sm-3 col-xs-6' style='padding-bottom:10px'><a href='#' class='btn  btn-squared-default-plain btn-primary' id='categories' data-id='"+register.categories[i].name+"'><img src='/assets/images/"+register.categories[i].icon+"'><br>"+register.categories[i].name+"</a></div>");
         }
   },
 
   displayTotal: function(){
-    $("#registerTotal").html("<div class='row'><p class='col-lg-10'>Total: </p><p class='col-lg-2'>$"+register.total+"</p></div>");
+    $("#registerTotal").html("<div class='row'><p class='col-lg-10 col-md-10 col-sm-10 col-xs-9'>Total: </p><p class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>$"+register.total+"</p></div>");
   },
 
   getProducts: function(category){
@@ -39,15 +39,15 @@ var register={
       // For each one
       for (var i = 0; i < data.length; i++) {
         // Display the apropos information on the page
-          $("#registerProducts").append("<div class='col-lg-4'><a href='#' class='btn btn-primary col-lg-10' style='height:75px' id='product' data-id='"+data[i]._id+"'>"+data[i].productName+"<br>$"+data[i].productPrice+"</a></div>");
+          $("#registerProducts").append("<div class='col-lg-4 col-md-4 col-sm-4 col-xs-6' style='padding-bottom:10px'><a href='#' class='btn btn-primary col-lg-12 col-md-12 col-sm-12 col-xs-12' style='height:75px' id='product' data-id='"+data[i]._id+"'>"+data[i].productName+"<br>$"+data[i].productPrice+"</a></div>");
         }
-      $("#registerProducts").append("<br><br><div class='row'><a href='#' class='btn btn-primary col-lg-12' id='goBackRegister'>Go Back &emsp;<img src='/assets/images/arrow.png'></a></div>");
+      $("#registerProducts").append("<br><br><div class='row'><a href='#' class='btn btn-primary col-lg-12 col-md-12 col-sm-12 col-xs-12' id='goBackRegister'>Go Back &emsp;<img src='/assets/images/arrow.png'></a></div>");
     });
   },
 
   addToReceipt: function(product){
     $.getJSON("/products/"+ product, function(data) {
-      $("#registerReceipt").append("<div class='row receiptRow' data-id='"+data._id+"' data-price='"+data.productPrice+"'><p class='col-lg-8'>"+data.productName+"</p><p class='col-lg-2 quantityProduct' data-quantity='1' data-id='"+data._id+"'>x 1</p><p class='col-lg-2 productPrice' data-id='"+data._id+"'>$"+data.productPrice+"<button type='button' class='close' id='removeProduct' data-id='"+data._id+"'>&times;</button></p></div>");
+      $("#registerReceipt").append("<div class='row receiptRow' data-id='"+data._id+"' data-price='"+data.productPrice+"'><p class='col-lg-8 col-md-8 col-sm-8 col-xs-7'>"+data.productName+"</p><p class='col-lg-2 col-md-2 col-sm-2 col-xs-2 quantityProduct' data-quantity='1' data-id='"+data._id+"'>x 1</p><p class='col-lg-2 col-md-2 col-sm-2 col-xs-3 productPrice' data-id='"+data._id+"'>$"+data.productPrice+"<button type='button' class='close' id='removeProduct' data-id='"+data._id+"'>&times;</button></p></div>");
       register.total=register.total+data.productPrice;
       register.displayTotal();
       register.receipt.push(product);
@@ -143,7 +143,7 @@ var register={
     $.getJSON("/receipts/activeTables", function(data) {
       $("#registerView").append("<div class='row' id='activeTables'></div>");
       for (i=0; i<data.length; i++){
-      $("#activeTables").append("<div class='col-lg-2'><a href='#' class='btn btn-primary col-lg-12' id='tableButtons' data-id='"+data[i]._id+"'>"+data[i].customerName+"<br>$"+data[i].totalToPay+"</a></div>");
+      $("#activeTables").append("<div class='col-lg-3 col-md-4 col-sm-4 col-xs-6' style='padding-bottom:10px'><a href='#' class='btn btn-primary col-lg-12 col-md-12 col-sm-12 col-xs-12' id='tableButtons' data-id='"+data[i]._id+"'>"+data[i].customerName+"<br>$"+data[i].totalToPay+"</a></div>");
       }
     });
   },
@@ -157,10 +157,10 @@ var register={
     $("#registerReceipt").html("");
     $("#registerTotal").html("");
     $.getJSON("receipts/activeTables/"+receipt, function(data){
-      $("#registerReceipt").append("<div class='row'>"+data.customerName+"</div>");
+      $("#registerReceipt").append("<div class='row'><div class='col-lg-12'><h3 class='text-center'>"+data.customerName+"</h3></div></div>");
       for(i=0; i<data.productsSell.length; i++){
           if(jQuery.inArray(data.productsSell[i]._id, register.receipt) === -1){
-            $("#registerReceipt").append("<div class='row receiptRow' data-id='"+data.productsSell[i]._id+"' data-price='"+data.productsSell[i].productPrice+"'><p class='col-lg-8'>"+data.productsSell[i].productName+"</p><p class='col-lg-2 quantityProduct' data-quantity='1' data-id='"+data.productsSell[i]._id+"'>x 1</p><p class='col-lg-2 productPrice' data-id='"+data.productsSell[i]._id+"'>$"+data.productsSell[i].productPrice+"<button type='button' class='close' id='removeProduct' data-id='"+data.productsSell[i]._id+"'>&times;</button></p></div>");
+            $("#registerReceipt").append("<div class='row receiptRow' data-id='"+data.productsSell[i]._id+"' data-price='"+data.productsSell[i].productPrice+"'><p class='col-lg-8 col-md-8 col-sm-8 col-xs-7'>"+data.productsSell[i].productName+"</p><p class='col-lg-2 col-md-2 col-sm-2 col-xs-2 quantityProduct' data-quantity='1' data-id='"+data.productsSell[i]._id+"'>x 1</p><p class='col-lg-2 col-md-2 col-sm-2 col-xs-3 productPrice' data-id='"+data.productsSell[i]._id+"'>$"+data.productsSell[i].productPrice+"<button type='button' class='close' id='removeProduct' data-id='"+data.productsSell[i]._id+"'>&times;</button></p></div>");
           } else {
             console.log("duplicate");
             register.duplicateProduct(data.productsSell[i]._id, true);

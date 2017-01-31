@@ -66,6 +66,7 @@ $(document).on("click", "#addProduct", function() {
       // Log the response
       console.log(data);
     });
+    management.displayTableProducts();
   $("#productName").val("");
   $("#productPrice").val("");
 });
