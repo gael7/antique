@@ -1,13 +1,13 @@
 <div class="container wrapper">
 	<div class="row">
 		<div class="col-lg-12">
-			<div class="jumbotron">
-				<h1>Management</h1>
+			<div class="jumbotron banner">
+				<h1 style="color: white">Management</h1>
 			</div>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-lg-6">
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 			<div class="panel panel-warning">
   				<div class="panel-heading">
     			<h3 class="panel-title">Add Product</h3>
@@ -15,20 +15,20 @@
   				<div class="panel-body">
 								<div class="form-group">
 									<div class="row">
-      						<label for="productName" class="col-lg-2 control-label">Name</label>
-      						<div class="col-lg-8">
+      						<label for="productName" class="col-lg-2 col-md-2 control-label">Name</label>
+      						<div class="col-lg-8 col-md-8">
         						<input type="text" class="form-control" id="productName">
       						</div>
 								</div>
 									<div class="row">
-									<label for="productPrice" class="col-lg-2 control-label">Price</label>
-										<div class="col-lg-8">
+									<label for="productPrice" class="col-lg-2 col-md-2 control-label">Price</label>
+										<div class="col-lg-8 col-md-8">
 	    							<input type="integer" class="form-control" id="productPrice">
 										</div>
 									</div>
 									<div class="row">
-										<label for="productCategory" class="col-lg-2 control-label">Category</label>
-      							<div class="col-lg-8">
+										<label for="productCategory" class="col-lg-2 col-md-2 control-label">Category</label>
+      							<div class="col-lg-8 col-md-8">
         							<select class="form-control" id="productCategory">
           							<option>drinks</option>
           							<option>bakery</option>
@@ -38,12 +38,13 @@
 										</div>
 									</div>
 								</div>
-							</div>
-						  <a href="#" class="btn btn-info" id="addProduct">Add Product</a>
+								<a href="#" class="btn btn-primary col-lg-4 col-lg-offset-4 col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4 col-xs-12" id="addProduct">Add Product</a>
+					</div>
+
 			</div>
 		</div>
 	</div>
-	<div class="row"><a href="#" class="btn btn-info" id="deleteReceipts">Delete Receipts</a></div>
+	<div class="row"><a href="#" class="btn btn-primary" id="deleteReceipts">Delete Receipts</a></div>
 		<div class="row">
 			<div class="col-lg-12">
 				<table class="table table-striped table-hover ">
@@ -93,4 +94,5 @@
       </div>
     </div>
 </div>
+<script src="assets/js/init.js"></script>
 <script src="assets/js/management.js"></script>

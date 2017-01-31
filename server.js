@@ -6,16 +6,16 @@ var bodyParser = require("body-parser");
 var routes= require("./controllers/antique_controller.js");
 var logger = require("morgan");
 var mongoose = require("mongoose");
-var
-
-//var User = require("./models/User.js");
-//var Receipt = require("./models/Receipt.js");
+var config = require("./config.js");
+var router = express.Router();
+var User = require("./models/User.js");
+var jwt = require("jsonwebtoken");
+var expressJwt = require('express-jwt');
 
 // Mongoose mpromise deprecated - use bluebird promises
 var Promise = require("bluebird");
 
 mongoose.Promise = Promise;
-
 
 // Initialize Express
 var app = express();
@@ -29,11 +29,18 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 
+//app.use('/antique/*', expressJwt({secret: 'antique'}));
+/*app.use(function (err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+        res.send(401, 'invalid token...');
+    }
+});*/
 
+app.use("/", routes);
 //Database configuration with mongoose
 //"mongodb://localhost/antique"
 //"mongodb://heroku_tkb9q367:47puamlbi6s6ge5hrocosore7h@ds117839.mlab.com:17839/heroku_tkb9q367"
-mongoose.connect("mongodb://localhost/antique");
+mongoose.connect(config.database);
 var db = mongoose.connection;
 
 // Show any mongoose errors
@@ -46,17 +53,13 @@ db.once("open", function() {
   console.log("Mongoose connection successful.");
 });
 
-
 app.use(methodOverride('_method'));
 
 app.engine('handlebars', exphbs({
 	defaultLayout: 'main'
 }));
-app.set('view engine', 'handlebars');
 
-// Routes
-// Controller routes
-app.use("/", routes);
+app.set('view engine', 'handlebars');
 
 // Init server
 app.listen(process.env.PORT || 3000, function(){

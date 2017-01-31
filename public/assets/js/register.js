@@ -1,5 +1,17 @@
 var register={
-  categories:["drinks", "bakery", "pastry", "brunch"],
+  categories:[{
+    name: "drinks",
+    icon: "coffee.png"
+  },{
+    name: "bakery",
+    icon: "bread.png"
+  },{
+    name: "pastry",
+    icon: "cupcake.png"
+  },{
+    name: "brunch",
+    icon: "restaurant.png"
+  }],
   total: 0,
   receipt:[],
   customerName: "",
@@ -12,7 +24,7 @@ var register={
     $("#registerProducts").html("");
     for (var i = 0; i < register.categories.length; i++) {
       // Display the apropos information on the page
-        $("#registerProducts").append("<div class='row'><a href='#' class='btn btn-info col-lg-12' id='categories' data-id='"+register.categories[i]+"'>"+register.categories[i]+"</a></div><br>");
+        $("#registerProducts").append("<div class='col-lg-3 col-md-3 col-sm-3 col-xs-6'><a href='#' class='btn  btn-squared-default-plain btn-primary' id='categories' data-id='"+register.categories[i].name+"'><img src='/assets/images/"+register.categories[i].icon+"'><br>"+register.categories[i].name+"</a></div>");
         }
   },
 
@@ -27,9 +39,9 @@ var register={
       // For each one
       for (var i = 0; i < data.length; i++) {
         // Display the apropos information on the page
-          $("#registerProducts").append("<div class='col-lg-4'><a href='#' class='btn btn-info col-lg-10' style='height:75px' id='product' data-id='"+data[i]._id+"'>"+data[i].productName+"<br>$"+data[i].productPrice+"</a></div>");
+          $("#registerProducts").append("<div class='col-lg-4'><a href='#' class='btn btn-primary col-lg-10' style='height:75px' id='product' data-id='"+data[i]._id+"'>"+data[i].productName+"<br>$"+data[i].productPrice+"</a></div>");
         }
-      $("#registerProducts").append("<br><br><div class='row'><a href='#' class='btn btn-info col-lg-12' id='goBackRegister'>Go Back</a></div>");
+      $("#registerProducts").append("<br><br><div class='row'><a href='#' class='btn btn-primary col-lg-12' id='goBackRegister'>Go Back &emsp;<img src='/assets/images/arrow.png'></a></div>");
     });
   },
 
@@ -124,14 +136,14 @@ var register={
   },
 
   customerTable: function(){
-    $("#registerCustomer").append("<label for='customerName' class='col-lg-2 control-label'>Name</label><div class='col-lg-6'><input type='text' class='form-control' id='customerName'></div><a href='#' class='btn btn-info col-lg-2' id='openTable'>Create</a>");
+    $("#registerCustomer").append("<label for='customerName' class='col-lg-2 control-label'>Name</label><div class='col-lg-6'><input type='text' class='form-control' id='customerName'></div><a href='#' class='btn btn-primary col-lg-2' id='openTable'>Create</a>");
   },
 
   displayActiveTables: function(){
     $.getJSON("/receipts/activeTables", function(data) {
       $("#registerView").append("<div class='row' id='activeTables'></div>");
       for (i=0; i<data.length; i++){
-      $("#activeTables").append("<div class='col-lg-2'><a href='#' class='btn btn-info col-lg-12' id='tableButtons' data-id='"+data[i]._id+"'>"+data[i].customerName+"<br>$"+data[i].totalToPay+"</a></div>");
+      $("#activeTables").append("<div class='col-lg-2'><a href='#' class='btn btn-primary col-lg-12' id='tableButtons' data-id='"+data[i]._id+"'>"+data[i].customerName+"<br>$"+data[i].totalToPay+"</a></div>");
       }
     });
   },
@@ -173,7 +185,7 @@ var register={
     $(".modal-body").append("<div class='row' id='modalBodyTotal'></div>");
     $("#modalBodyTotal").append("<div class='col-lg-4' id='amount'><h1>$"+register.total+"</h1></div>");
     $("#modalBodyTotal").append("<div class='col-lg-8'><label for='payInput' class='col-lg-4 control-label'>Amount</label><div class='col-lg-6'><input id='payInput' class='form-control' type='integer'></div></div>");
-    $(".modal-footer").append("<a href='#' class='btn btn-info col-lg-4' id='paymentTotal'>Pay</a><h4>Say thanks</h4>");
+    $(".modal-footer").append("<a href='#' class='btn btn-primary col-lg-4' id='paymentTotal'>Pay</a><h4>Say thanks</h4>");
   },
 
   paymentReady: function(){

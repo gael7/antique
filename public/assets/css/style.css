@@ -1,3 +1,57 @@
 div.modal div.modal-backdrop {
     z-index: 0;
 }
+
+.btn-squared-default {
+    width: 100px !important;
+    height: 100px !important;
+    font-size: 25px;
+}
+
+.btn-squared-default:hover {
+    border: 3px solid white;
+    font-weight: 800;
+}
+
+.btn-squared-default-plain {
+    width: 100px !important;
+    height: 100px !important;
+    font-size: 25px;
+}
+
+.btn-squared-default-plain:hover {
+    border: 0px solid white;
+}
+
+@media only screen and (max-width : 768px){
+  .example-8 .navbar-brand {
+  padding: 0px;
+  transform: translateX(-50%);
+  left: 50%;
+  position: absolute;
+}
+.example-8 .navbar-brand>img {
+  height: 100%;
+  width: auto;
+  padding: 7px 14px;
+}
+}
+
+.example-8 .navbar-brand {
+  background: url('/assets/images/logo.jpg') center / contain no-repeat;
+  width: 200px;
+  transform: translateX(-50%);
+  left: 50%;
+  position: absolute;
+}
+
+.panel-footer{
+  color: #c09853;
+  background-color: #fcf8e3;
+  border-color: #fbeed5;
+}
+
+.banner{
+  background-image: url('/assets/images/banner.jpg');
+  background-size: 100% 100%;
+}

@@ -2,13 +2,35 @@ var express=require('express');
 var router=express.Router();
 var Product = require("../models/Product.js");
 var Receipt = require("../models/Receipt.js");
+var User = require("../models/User.js");
 
 //HTML routes
 router.get('/', function(req, res){
   res.render('login');
 });
 
+router.post('/registration', function(req, res, next) {
+  newUser = new User(req.body);
+  newUser.save(function(error, doc){
+    if(error){
+      console.log(error);
+    } else {
+      res.json({redirect: '/management'});
+    }
+  });
+});
 
+router.post('/login', function(req, res, next) {
+  User.getAuthenticated(req.body, function(err, token, user) {
+      if (err) throw err;
+      else if(token){
+          res.json({token: token, user: user, redirect: "/management"});
+        }
+      });
+});
+router.get('/secret', function(req, res){
+  res.render('registration');
+});
 
 router.get('/management', function(req, res){
   res.render('management');
@@ -21,7 +43,6 @@ router.get('/kitchen', function(req, res){
 router.get('/register', function(req, res){
   res.render('register');
 });
-
 
 //Products Routes
 router.get('/products', function(req, res){
@@ -88,9 +109,6 @@ router.delete('/deleteProduct/:id', function(req, res){
     }
   });
 });
-
-
-
 
 //Receipt Routes
 router.post('/createReceipt', function(req, res){
