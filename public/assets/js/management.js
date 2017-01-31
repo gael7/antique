@@ -45,8 +45,11 @@ var management={
   }
 };
 
-management.displayTableProducts();
-management.displayTableReceipts();
+$(document).ready(function(){
+  management.displayTableProducts();
+  management.displayTableReceipts();
+});
+
 
 $(document).on("click", "#addProduct", function() {
   $.ajax({

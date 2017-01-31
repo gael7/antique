@@ -4,6 +4,6 @@ var init={
   },
 };
 
-$(document).on("ready", function(){
+$(document).ready(function(){
 init.navbar();
 });

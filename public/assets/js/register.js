@@ -198,7 +198,7 @@ var register={
   }
 };
 
-$(document).on("ready", function(){
+$(document).ready(function(){
   register.displayCategories();
   register.displayActiveTables();
 });
