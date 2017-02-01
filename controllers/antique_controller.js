@@ -160,9 +160,32 @@ router.get('/receipts/activeTables/:id', function(req, res){
   });
 });
 
+router.get('/receipts/pending', function(req, res){
+  Receipt.find({deliver: false})
+  .populate('productsSell')
+  .exec(function(error, doc){
+    if(error){
+      console.log(error);
+    } else {
+      res.json(doc);
+    }
+  });
+});
+
 router.put('/updateReceipt/:id', function(req, res){
   req.body.productsSell=JSON.parse(req.body.productsSell);
   Receipt.findOneAndUpdate({"_id": req.params.id}, {"activeTable": req.body.activeTable, "productsSell": req.body.productsSell, "totalToPay": req.body.totalToPay})
+  .exec(function(err, doc){
+    if (err){
+      console.log(err);
+    } else {
+      res.send(doc);
+    }
+  });
+});
+
+router.put('/receipts/deliver/:id', function(req, res){
+  Receipt.findOneAndUpdate({"_id": req.params.id}, {"deliver": req.body})
   .exec(function(err, doc){
     if (err){
       console.log(err);

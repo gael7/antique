@@ -7,7 +7,6 @@ var Schema = mongoose.Schema;
 var ReceiptSchema = new Schema({
   customerName: {
     type: String,
-    default: "Away",
   },
   // Date for receipt is a required string
   date: {
@@ -17,6 +16,11 @@ var ReceiptSchema = new Schema({
   //Is it an active table
   activeTable: {
     type: Boolean,
+    required: true
+  },
+  deliver: {
+    type: Boolean,
+    default: false,
     required: true
   },
   //Products on the receipt
