@@ -67,7 +67,7 @@ UserSchema.statics.getAuthenticated = function (user, callback) {
                     var token = jsonwebtoken.sign(doc, 'supersecret', {
                         expiresIn: 60*60*24 // expires in 24 hours
                     });
-                    return callback(null, token, doc);
+                    return callback(null, token, doc, user.username);
                 }
                 else {
                     return callback(new Error('Invalid username or password.'), null);

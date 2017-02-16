@@ -24,7 +24,7 @@ router.post('/login', function(req, res, next) {
   User.getAuthenticated(req.body, function(err, token, user) {
       if (err) throw err;
       else if(token){
-          res.json({token: token, user: user, redirect: "/management"});
+                res.json({token: token, redirect: "/management"});
         }
       });
 });
@@ -130,6 +130,20 @@ router.post('/createReceipt', function(req, res){
 
 router.get('/receipts', function(req, res){
   Receipt.find({}, function(error, doc){
+    if(error){
+      console.log(error);
+    } else {
+      res.json(doc);
+    }
+  });
+});
+router.get('/receipts/byDate/:receiptsdate1/:receiptsdate2', function(req, res){
+  date1=req.params.receiptsdate1+"T00:00:00Z";
+  date2=req.params.receiptsdate2+"T23:59:59Z";
+  console.log(date1);
+  console.log(date2);
+  Receipt.find({"date": {"$gte": date1,"$lt":date2 }}, function(error, doc){
+    //console.log(req.params.date);
     if(error){
       console.log(error);
     } else {

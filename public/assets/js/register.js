@@ -278,18 +278,20 @@ $(document).on("click", "#product", function() {
 $(document).on("click", "#paymentTotal", function(){
   var payment=$("#payInput").val();
   console.log("payment: "+payment);
-  register.temporalTotal=Math.abs(register.temporalTotal-payment);
+  register.temporalTotal=register.temporalTotal-payment;
   if(register.temporalTotal===0){
     register.paymentReady();
     $('#payModal').modal('hide');
     register.temporalTotal=0;
-  } else if (register.temporalTotal<payment){
-    $("#modalBodyTotal").html("<div class='col-lg-12'><h1> Change: $"+register.temporalTotal+"</h1></div>");
+  } else if (register.total<payment){
+    var change=Math.abs(register.temporalTotal);
+    $("#modalBodyTotal").html("<div class='col-lg-12'><h1> Change: $"+change+"</h1></div>");
     $(".modal-footer").html("<h4>Say thanks</h4>");
     register.temporalTotal=0;
     register.paymentReady();
-  } else if (register.temporalTotal>payment){
+  } else if (register.total>payment){
+    var remain=Math.abs(register.temporalTotal);
     $("#payInput").val("");
-    $("#amount").html("<h1>Remain: $"+register.temporalTotal+"</h1>");
+    $("#amount").html("<h1>Remain: $"+remain+"</h1>");
   }
 });
