@@ -5,7 +5,7 @@ var management={
     $("#controlPanelAll").append("<div class='row'><div class='col-lg-12'><div class='col-lg-10'><h4>View All Products</h4></div><div class='col-lg-2'><a href='#' class='btn btn-primary' id='allProductsControl'>Go</a></div></div></div>");
     $("#controlPanelAll").append("<div class='row'><div class='col-lg-12'><div class='col-lg-10'><h4>View All Receipts</h4></div><div class='col-lg-2'><a href='#' class='btn btn-primary' id='allReceiptsControl'>Go</a></div></div></div>");
     $("#controlPanelAll").append("<div class='row'><div class='col-lg-12'><div class='col-lg-10'><h4>Delete All Receipts</h4></div><div class='col-lg-2'><a href='#' class='btn btn-danger disabled' id='deleteReceipts'>Go</a></div></div></div>");
-    $("#controlPanelCategory").append("<div class='row'><div class='col-lg-12'><div class='col-lg-6'><h4>Products by Category</h4></div><div class='col-lg-5'><select class='form-control' id='productCategory'><option>drinks</option><option>bakery</option><option>pastry</option><option>brunch</option></select></div><div class='col-lg-1'><a href='#' class='btn btn-primary' id='productsByCategoryControl'>Go</a></div></div></div>");
+    $("#controlPanelCategory").append("<div class='row'><div class='col-lg-12'><div class='col-lg-6'><h4>Products by Category</h4></div><div class='col-lg-5'><select class='form-control' id='productCategoryC'><option>drinks</option><option>bakery</option><option>pastry</option><option>brunch</option></select></div><div class='col-lg-1'><a href='#' class='btn btn-primary' id='productsByCategoryControl'>Go</a></div></div></div>");
     $("#controlPanelCategory").append("<div class='row'><div class='col-lg-12'><div class='col-lg-6'><h4>Receipts by Date Range</h4></div><div class='col-lg-5'><input type='text' class='form-control' name='daterange'/></div><div class='col-lg-1'><a href='#' class='btn btn-primary' id='receiptsByDateControl'>Go</a></div></div></div>");
   },
 
@@ -100,7 +100,7 @@ $(document).on("click", "#allReceiptsControl", function(){
 });
 
 $(document).on("click", "#productsByCategoryControl", function(){
-  var category=$("#productCategory").val();
+  var category=$("#productCategoryC").val();
   management.displayTableProductsByCategory(category);
 });
 
@@ -127,7 +127,7 @@ $(document).on("click", "#addProduct", function() {
       // Value taken from price input
       productPrice: $("#productPrice").val().trim(),
       // Value taken from category input
-      productCategory: $("#productCategory").val().trim(),
+      productCategory: $("#productCategory").val(),
     }
   })
     // With that done

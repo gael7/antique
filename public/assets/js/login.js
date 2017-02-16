@@ -12,10 +12,9 @@ $(document).on("click", "#loginButton", function(){
     }
   })
   .done(function(data){
-    console.log(data.token);
-    localStorage.setItem('userToken', data.token);
-                if (typeof(data.redirect) == 'string'){
-                    window.location = data.redirect;
-                  }
+    console.log(data);
+    if (typeof(data.redirect) == 'string'){
+        window.location = data.redirect;
+    }
   });
 });
