@@ -1,4 +1,5 @@
 var management={
+  receiptTotal: 0,
   displayControlPanel: function(){
     $("#controlPanel").html("<div class='col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-2 col-sm-6 col-sm-offset-3 col-xs-12'><div class='panel panel-warning'><div class='panel-heading'><h3 class='panel-title'>Management Control</h3></div><div class='panel-body'><div class='col-lg-4' id='controlPanelAll'></div><div class='col-lg-8' id='controlPanelCategory'></div></div></div>");
     $("#controlPanelAll").append("<div class='row'><div class='col-lg-12'><div class='col-lg-10'><h4>Add Product</h4></div><div class='col-lg-2'><a href='#actionPanel' class='btn btn-primary' id='addProductControl'>Go</a></div></div></div>");
@@ -35,6 +36,7 @@ var management={
   },
 
   displayTableReceipts: function(){
+    management.receiptTotal=0;
     $("#actionPanel").html("<div class='row'><div class='col-lg-12'><table class='table table-striped table-hover'><thead><tr><th>#</th><th>Name</th><th>$ Total</th><th>Date</th><th>Time</th><th>Delete</th></tr></thead><tbody id='receiptsTable'></tbody></table></div></div>");
     $.getJSON("/receipts", function(data) {
       console.log(data);
@@ -44,11 +46,14 @@ var management={
           data[i].date=data[i].date.split("T");
           data[i].date[1]=data[i].date[1].split(".");
           $("#receiptsTable").append("<tr><td>"+i+"</td><td>"+data[i].customerName+"</td><td>"+data[i].totalToPay+"</td><td>"+data[i].date[0]+"</td><td>"+data[i].date[1][0]+"</td><td><button type='button' class='close' id='deleteReceipt' data-id='"+data[i]._id+"'>&times;</button></td></tr>");
+          management.receiptTotal=management.receiptTotal+data[i].totalToPay;
         }
+        $("#receiptsTable").append("<tr class='warning'><td>"+data.length+"</td><td>Total:</td><td>$"+management.receiptTotal+"</td><td></td><td></td><td></td><tr>");
     });
   },
 
   displayTableReceiptByDate: function(date, date1){
+    management.receiptTotal=0;
     $("#actionPanel").html("<div class='row'><div class='col-lg-12'><table class='table table-striped table-hover'><thead><tr><th>#</th><th>Name</th><th>$ Total</th><th>Date</th><th>Time</th><th>Delete</th></tr></thead><tbody id='receiptsTable'></tbody></table></div></div>");
     $.getJSON("/receipts/byDate/"+date+"/"+date1, function(data) {
       console.log(data);
@@ -58,7 +63,9 @@ var management={
           data[i].date=data[i].date.split("T");
           data[i].date[1]=data[i].date[1].split(".");
           $("#receiptsTable").append("<tr><td>"+i+"</td><td>"+data[i].customerName+"</td><td>"+data[i].totalToPay+"</td><td>"+data[i].date[0]+"</td><td>"+data[i].date[1][0]+"</td><td><button type='button' class='close' id='deleteReceipt' data-id='"+data[i]._id+"'>&times;</button></td></tr>");
+          management.receiptTotal=management.receiptTotal+data[i].totalToPay;
         }
+        $("#receiptsTable").append("<tr class='warning'><td>"+data.length+"</td><td>Total:</td><td>$"+management.receiptTotal+"</td><td></td><td></td><td></td><tr>");
     });
   },
 
