@@ -1,12 +1,12 @@
 var management={
   displayControlPanel: function(){
     $("#controlPanel").html("<div class='col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-2 col-sm-6 col-sm-offset-3 col-xs-12'><div class='panel panel-warning'><div class='panel-heading'><h3 class='panel-title'>Management Control</h3></div><div class='panel-body'><div class='col-lg-4' id='controlPanelAll'></div><div class='col-lg-8' id='controlPanelCategory'></div></div></div>");
-    $("#controlPanelAll").append("<div class='row'><div class='col-lg-12'><div class='col-lg-10'><h4>Add Product</h4></div><div class='col-lg-2'><a href='#' class='btn btn-primary' id='addProductControl'>Go</a></div></div></div>");
-    $("#controlPanelAll").append("<div class='row'><div class='col-lg-12'><div class='col-lg-10'><h4>View All Products</h4></div><div class='col-lg-2'><a href='#' class='btn btn-primary' id='allProductsControl'>Go</a></div></div></div>");
-    $("#controlPanelAll").append("<div class='row'><div class='col-lg-12'><div class='col-lg-10'><h4>View All Receipts</h4></div><div class='col-lg-2'><a href='#' class='btn btn-primary' id='allReceiptsControl'>Go</a></div></div></div>");
-    $("#controlPanelAll").append("<div class='row'><div class='col-lg-12'><div class='col-lg-10'><h4>Delete All Receipts</h4></div><div class='col-lg-2'><a href='#' class='btn btn-danger disabled' id='deleteReceipts'>Go</a></div></div></div>");
-    $("#controlPanelCategory").append("<div class='row'><div class='col-lg-12'><div class='col-lg-6'><h4>Products by Category</h4></div><div class='col-lg-5'><select class='form-control' id='productCategoryC'><option>drinks</option><option>bakery</option><option>pastry</option><option>brunch</option></select></div><div class='col-lg-1'><a href='#' class='btn btn-primary' id='productsByCategoryControl'>Go</a></div></div></div>");
-    $("#controlPanelCategory").append("<div class='row'><div class='col-lg-12'><div class='col-lg-6'><h4>Receipts by Date Range</h4></div><div class='col-lg-5'><input type='text' class='form-control' name='daterange'/></div><div class='col-lg-1'><a href='#' class='btn btn-primary' id='receiptsByDateControl'>Go</a></div></div></div>");
+    $("#controlPanelAll").append("<div class='row'><div class='col-lg-12'><div class='col-lg-10'><h4>Add Product</h4></div><div class='col-lg-2'><a href='#actionPanel' class='btn btn-primary' id='addProductControl'>Go</a></div></div></div>");
+    $("#controlPanelAll").append("<div class='row'><div class='col-lg-12'><div class='col-lg-10'><h4>View All Products</h4></div><div class='col-lg-2'><a href='#actionPanel' class='btn btn-primary' id='allProductsControl'>Go</a></div></div></div>");
+    $("#controlPanelAll").append("<div class='row'><div class='col-lg-12'><div class='col-lg-10'><h4>View All Receipts</h4></div><div class='col-lg-2'><a href='#actionPanel' class='btn btn-primary' id='allReceiptsControl'>Go</a></div></div></div>");
+    $("#controlPanelAll").append("<div class='row'><div class='col-lg-12'><div class='col-lg-10'><h4>Delete All Receipts</h4></div><div class='col-lg-2'><a href='#actionPanel' class='btn btn-danger disabled' id='deleteReceipts'>Go</a></div></div></div>");
+    $("#controlPanelCategory").append("<div class='row'><div class='col-lg-12'><div class='col-lg-6'><h4>Products by Category</h4></div><div class='col-lg-5'><select class='form-control' id='productCategoryC'><option>drinks</option><option>bakery</option><option>pastry</option><option>brunch</option></select></div><div class='col-lg-1'><a href='#actionPanel' class='btn btn-primary' id='productsByCategoryControl'>Go</a></div></div></div>");
+    $("#controlPanelCategory").append("<div class='row'><div class='col-lg-12'><div class='col-lg-6'><h4>Receipts by Date Range</h4></div><div class='col-lg-5'><input type='text' class='form-control' name='daterange'/></div><div class='col-lg-1'><a href='#actionPanel' class='btn btn-primary' id='receiptsByDateControl'>Go</a></div></div></div>");
   },
 
   displayAddProduct: function(){
@@ -129,13 +129,9 @@ $(document).on("click", "#addProduct", function() {
       // Value taken from category input
       productCategory: $("#productCategory").val(),
     }
-  })
-    // With that done
-    .done(function(data) {
-      // Log the response
-      console.log(data);
+  }).done(function(data) {
+      management.displayTableProducts();
     });
-    management.displayTableProducts();
   $("#productName").val("");
   $("#productPrice").val("");
 });
@@ -158,11 +154,8 @@ $(document).on("click", "#updateProductDb", function(){
       // Value taken from category input
       productCategory: $("#productCategoryUpdate").val().trim(),
     }
-  })
-    // With that done
-    .done(function(data) {
-      // Log the response
-      console.log(data);
+  }).done(function(data) {
+    management.displayTableProducts();
     });
     $(".modal-header").html();
     $(".modal-body").html();
@@ -170,25 +163,29 @@ $(document).on("click", "#updateProductDb", function(){
     $("#updateProductModal").modal("hide");
     $("#productNameUpdate").val("");
     $("#productPriceUpdate").val("");
-  management.displayTableProducts();
 });
 
 $(document).on("click", "#deleteProduct", function(){
   console.log("deleting product");
   var thisId=$(this).attr("data-id");
-  $.ajax({method: "DELETE", url: "deleteProduct/"+thisId});
-  management.displayTableProducts();
+  $.ajax({method: "DELETE", url: "deleteProduct/"+thisId}).done(function(data){
+    console.log(data);
+      management.displayTableProducts();
+  });
 });
 
 $(document).on("click", "#deleteReceipt", function(){
   console.log("Is button working?");
   var thisId=$(this).attr("data-id");
-  $.ajax({method: "DELETE", url: "deleteReceipt/"+thisId});
-  management.displayTableReceipts();
+  $.ajax({method: "DELETE", url: "deleteReceipt/"+thisId}).done(function(data){
+    console.log(data);
+      management.displayTableReceipts();
+  });
 });
 
 $(document).on("click", "#deleteReceipts", function(){
   console.log("Deleting receipts");
-  $.ajax({method: "DELETE", url: "deleteReceipts/"});
-  management.displayTableReceipts();
+  $.ajax({method: "DELETE", url: "deleteReceipts/"}).done(function(data){
+    management.displayTableReceipts();
+  });
 });

@@ -1,5 +1,7 @@
 var Product = require("../models/Product.js");
 var Receipt = require("../models/Receipt.js");
+var Promise = require("bluebird");
+Promise.promisifyAll(require("mongoose"));
 
 module.exports=function(router, passport){
 //HTML routes
@@ -69,8 +71,8 @@ router.get('/products/byCategory/:category', function(req, res){
 router.post('/addProduct', function(req, res){
   //Create new product and pass the req.body to the entry
   var newProduct= new Product(req.body);
-  newProduct.save().then(function(doc){
-    console.log(doc);
+  newProduct.saveAsync().then(function(doc){
+    res.json({message: "Product added"});
   }).catch(function(error){
     console.log(error);
   });
@@ -86,8 +88,8 @@ router.put('/updateProduct/:id', function(req, res){
 });
 
 router.delete('/deleteProduct/:id', function(req, res){
-  Product.findByIdAndRemove({"_id": req.params.id}).then(function(doc){
-    console.log("Product Deleted");
+  Product.findByIdAndRemoveAsync({"_id": req.params.id}).then(function(doc){
+    res.json({message: "Product Deleted"});
   }).catch(function(error){
       console.log(error);
   });
@@ -98,8 +100,8 @@ router.post('/createReceipt', function(req, res){
   //Create new receipt and pass the req.body to the entry
   req.body.productsSell=JSON.parse(req.body.productsSell);
   var newReceipt= new Receipt(req.body);
-  newReceipt.save().then(function(doc){
-    console.log(doc);
+  newReceipt.saveAsync().then(function(doc){
+    res.json({message: "Receipt Created"});
   }).catch(function(error){
     console.log(error);
   });
@@ -171,8 +173,8 @@ router.put('/receipts/deliver/:id', function(req, res){
 });
 
 router.delete('/deleteReceipt/:id', function(req, res){
-  Receipt.findByIdAndRemove({"_id": req.params.id}).then(function(doc){
-    console.log("Receipt Deleted");
+  Receipt.findByIdAndRemoveAsync({"_id": req.params.id}).then(function(doc){
+    res.json({message: "Receipt Deleted"});
   }).catch(function(error){
     console.log(error);
   });

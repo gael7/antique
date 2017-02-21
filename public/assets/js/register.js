@@ -88,11 +88,8 @@ var register={
     $.ajax({method: "POST",
       url: "/createReceipt",
       data: register.receiptInfo,
-    })
-      // With that done
-      .done(function(data) {
-        // Log the response
-        console.log(data);
+    }).done(function(data) {
+        register.displayActiveTables();
       });
       register.total=0;
       register.receipt=[];
@@ -101,7 +98,6 @@ var register={
       $("#registerReceipt").html("");
       $("#registerTotal").html("");
       $("#activeTables").html("");
-      register.displayActiveTables();
     } else {
       console.log("No creating receipt");
     }
@@ -120,7 +116,7 @@ var register={
     url: "/updateReceipt/"+register.receiptID,
     data: register.receiptInfo,
     }).done(function(data){
-    console.log(data);
+    register.displayActiveTables();
     });
     register.total=0;
     register.receipt=[];
@@ -130,7 +126,6 @@ var register={
     $("#registerTotal").html("");
     $("#activeTables").html("");
     $("#updateReceipt").addClass("disabled");
-    register.displayActiveTables();
     $("#createTable").addClass("disabled");
     $("#readyToPay").addClass("disabled");
   },
@@ -157,6 +152,7 @@ var register={
     $("#registerReceipt").html("");
     $("#registerTotal").html("");
     $.getJSON("receipts/activeTables/"+receipt, function(data){
+      console.log(data);
       $("#registerReceipt").append("<div class='row'><div class='col-lg-12'><h3 class='text-center'>"+data.customerName+"</h3></div></div>");
       for(i=0; i<data.productsSell.length; i++){
           if(jQuery.inArray(data.productsSell[i]._id, register.receipt) === -1){
@@ -283,13 +279,15 @@ $(document).on("click", "#paymentTotal", function(){
     register.paymentReady();
     $('#payModal').modal('hide');
     register.temporalTotal=0;
-  } else if (register.total<payment){
+  } else if (register.total<payment || register.temporalTotal<0){
+    console.log("Change: " +register.temporalTotal);
     var change=Math.abs(register.temporalTotal);
     $("#modalBodyTotal").html("<div class='col-lg-12'><h1> Change: $"+change+"</h1></div>");
     $(".modal-footer").html("<h4>Say thanks</h4>");
     register.temporalTotal=0;
     register.paymentReady();
-  } else if (register.total>payment){
+  } else if (register.total>payment || register.temporalTotal>0){
+    console.log("Remain: " +register.temporalTotal);
     var remain=Math.abs(register.temporalTotal);
     $("#payInput").val("");
     $("#amount").html("<h1>Remain: $"+remain+"</h1>");
