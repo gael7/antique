@@ -3,6 +3,8 @@ var registration={
     var username=$("#usernameInput").val();
     var password=$("#passwordInput").val();
     var password2=$("#password2Input").val();
+    var isAdm=$("#isAdmInput").is(":checked");
+    console.log(isAdm);
     if (password===password2){
       $.ajax({
         method: "POST",
@@ -10,6 +12,7 @@ var registration={
         data: {
           username: username,
           password: password,
+          isAdm: isAdm
         }
       })
       .done(function(data){

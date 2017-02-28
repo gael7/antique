@@ -10,7 +10,7 @@ router.get('/', function(req, res){
 });
 
 router.post('/registration', passport.authenticate('local-registration'), function(req, res){
-  res.redirect('/management');
+  res.json({redirect: '/login'});
 });
 
 router.get('/login', function(req, res){
@@ -27,9 +27,13 @@ router.get('/secret', function(req, res){
 
 
 router.get('/management', isLoggedIn, function(req, res){
-  res.render('management',{
-    user: req.user
-  });
+  var isAdm=req.session.passport.user.local.isAdm;
+  console.log(isAdm);
+  if (isAdm===true){
+  res.render('management');
+} else if(isAdm===false){
+  res.redirect('/register');
+}
 });
 
 router.get('/kitchen', isLoggedIn, function(req, res){
