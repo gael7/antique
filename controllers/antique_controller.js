@@ -2,6 +2,8 @@ var Product = require("../models/Product.js");
 var Receipt = require("../models/Receipt.js");
 var Promise = require("bluebird");
 Promise.promisifyAll(require("mongoose"));
+var nodemailer = require('nodemailer');
+var moment = require('moment-timezone');
 
 module.exports=function(router, passport){
 //HTML routes
@@ -25,10 +27,68 @@ router.get('/secret', function(req, res){
   res.render('registration');
 });
 
+router.post('/emailReceipt', function(req, res){
+  var ticketID=req.body.receiptID;
+
+  Receipt.findOne({"_id": ticketID}).populate('productsSell')
+  .then(function(doc){
+    var receipt=doc;
+    var products=[];
+    var productsHTML='<div id="products" style="padding-top: 5px;">';
+    var htmlString='<div id="receipt" style="border-style: solid; border-width: 1px; display: inline-block">'+
+      '<div id="header" style="border-style: dashed; border-width: 0px 0px 1px 0px; margin: 0px 10px">'+
+      '<h2 style="text-align: center; margin-bottom: 0px">Antique</h2>'+
+      '<p style="text-align: center; margin: 0px">Campeche #1822</p>'+
+      '<p style="text-align: center; margin: 0px">Nuevo Laredo, Tamaulipas</p>'+
+      '<p style="text-align: center; margin: 0px">+52 (867) 714 9351 </p></div>';
+      for(i=0; i<receipt.productsSell.length; i++){
+        if(products.indexOf(receipt.productsSell[i]._id)===-1){
+        var count=0;
+        for (a=0; a<receipt.productsSell.length; a++){
+          if (receipt.productsSell[a]._id===receipt.productsSell[i]._id){
+            count++;
+          }
+        }
+        var price=receipt.productsSell[i].productPrice*count;
+        productsHTML=productsHTML+'<div style="padding-top: 5px; clear: both;"><p id="name" style="display: inline-block; float: left; margin: 1px 10px">'+count+" "+receipt.productsSell[i].productName+'</p><p id="price" style="display: inline-block; float: right; margin: 1px 10px">$'+price+'</p></div>';
+        products.push(receipt.productsSell[i]._id);
+      }
+    }
+      htmlString=htmlString+productsHTML+'</div><div id="total" style="padding-top: 10px; clear: both;">'+
+      '<p style=" text-align: right; margin-right: 10px"><b>$'+receipt.totalToPay+'</b></p></div></div>';
+      //Setup Nodemailer transport, I chose gmail. Create an application-specific password to avoid problems.
+      var transporter = nodemailer.createTransport({
+          service: 'Gmail',
+          auth: {
+              user: "gaelarrambide@gmail.com",
+              pass: "071592gael"
+          }
+      });
+      //Mail options
+      var mailOpts = {
+          from: '"Antique" <gaelarrambide@gmail.com>', //grab form data from the request body object
+          to: req.body.email,
+          subject: 'Su ticket de Compra',
+          text: ticketID,
+          html: htmlString
+      };
+      transporter.sendMail(mailOpts, function (error, info) {
+        if (error) {
+            return console.log(error);
+        }
+        res.json({message: "Send"});
+      });
+
+    }).catch(function(error){
+      console.log(error);
+  });
+
+
+});
+
 
 router.get('/management', isLoggedIn, function(req, res){
   var isAdm=req.session.passport.user.local.isAdm;
-  console.log(isAdm);
   if (isAdm===true){
   res.render('management');
 } else if(isAdm===false){
@@ -105,7 +165,7 @@ router.post('/createReceipt', function(req, res){
   req.body.productsSell=JSON.parse(req.body.productsSell);
   var newReceipt= new Receipt(req.body);
   newReceipt.saveAsync().then(function(doc){
-    res.json({message: "Receipt Created"});
+    res.json(doc._id);
   }).catch(function(error){
     console.log(error);
   });
@@ -122,8 +182,14 @@ router.get('/receipts', function(req, res){
 router.get('/receipts/byDate/:receiptsdate1/:receiptsdate2', function(req, res){
   date1=req.params.receiptsdate1+"T00:00:00Z";
   date2=req.params.receiptsdate2+"T23:59:59Z";
-  console.log(date1);
-  console.log(date2);
+  date1=moment(date1).utcOffset('+06:00').format();
+  date2=moment(date2).utcOffset('+06:00').format();
+  date1=date1.split("T");
+  date11=date1[1].split("+");
+  date1=date1[0]+"T"+date11[0]+".000Z";
+  date2=date2.split("T");
+  date21=date2[1].split("+");
+  date2=date2[0]+"T"+date21[0]+".000Z";
   Receipt.find({"date": {"$gte": date1,"$lt":date2 }}).then(function(doc){
       res.json(doc);
     }).catch(function(error){
@@ -186,7 +252,6 @@ router.delete('/deleteReceipt/:id', function(req, res){
 
 router.delete('/deleteReceipts/', function(req, res){
   Receipt.remove({}).then(function(doc){
-    console.log("Receipts Deleted");
   }).catch(function(error){
     console.log(error);
   });

@@ -4,7 +4,6 @@ var registration={
     var password=$("#passwordInput").val();
     var password2=$("#password2Input").val();
     var isAdm=$("#isAdmInput").is(":checked");
-    console.log(isAdm);
     if (password===password2){
       $.ajax({
         method: "POST",
@@ -27,6 +26,5 @@ var registration={
 };
 
 $(document).on("click", "#registrationButton", function(){
-  console.log("Registration attempt");
   registration.register();
 });

@@ -34,7 +34,6 @@ var register={
 
   getProducts: function(category){
     $("#registerProducts").html("");
-    console.log(category);
     $.getJSON("/products/byCategory/"+ category, function(data) {
       // For each one
       for (var i = 0; i < data.length; i++) {
@@ -52,8 +51,9 @@ var register={
       register.displayTotal();
       register.receipt.push(product);
     });
-    console.log(register.receipt);
+    if(register.customerName===""){
     $("#createTable").removeClass("disabled");
+  }
     $("#readyToPay").removeClass("disabled");
   },
 
@@ -67,7 +67,6 @@ var register={
     $(".productPrice").filter("[data-id='"+product+"']").html("$"+newProductPrice+"<button type='button' class='close' id='removeProduct' data-id='"+product+"'>&times;</button>");
     $(".quantityProduct").filter("[data-id='"+product+"']").html("x "+newQuantityProduct);
     if(isFromReceipt!==true){
-      console.log("Is not from receipt");
     register.total=register.total+(duplicateProductPrice/quantityProduct);
     register.receipt.push(product);
     register.displayTotal();
@@ -75,7 +74,6 @@ var register={
   },
 
   createReceipt: function(table, customerName){
-    //console.log("createReceipt function: "+register.receipt);
     $("#registerCustomer").html("");
     register.receiptInfo={
       customerName: register.customerName,
@@ -84,11 +82,11 @@ var register={
       productsSell: JSON.stringify(register.receipt),
     };
     if(register.total!==0 && register.receipt!==[]){
-    console.log(register.receiptInfo);
     $.ajax({method: "POST",
       url: "/createReceipt",
       data: register.receiptInfo,
     }).done(function(data) {
+        register.receiptID=data;
         register.displayActiveTables();
       });
       register.total=0;
@@ -98,15 +96,12 @@ var register={
       $("#registerReceipt").html("");
       $("#registerTotal").html("");
       $("#activeTables").html("");
-    } else {
-      console.log("No creating receipt");
     }
     $("#createTable").addClass("disabled");
     $("#readyToPay").addClass("disabled");
   },
 
   updateReceipt: function(table){
-    console.log("update receipt function");
     register.receiptInfo={
       activeTable: table,
       totalToPay: register.total,
@@ -152,13 +147,11 @@ var register={
     $("#registerReceipt").html("");
     $("#registerTotal").html("");
     $.getJSON("receipts/activeTables/"+receipt, function(data){
-      console.log(data);
       $("#registerReceipt").append("<div class='row'><div class='col-lg-12'><h3 class='text-center'>"+data.customerName+"</h3></div></div>");
       for(i=0; i<data.productsSell.length; i++){
           if(jQuery.inArray(data.productsSell[i]._id, register.receipt) === -1){
             $("#registerReceipt").append("<div class='row receiptRow' data-id='"+data.productsSell[i]._id+"' data-price='"+data.productsSell[i].productPrice+"'><p class='col-lg-8 col-md-8 col-sm-8 col-xs-7'>"+data.productsSell[i].productName+"</p><p class='col-lg-2 col-md-2 col-sm-2 col-xs-2 quantityProduct' data-quantity='1' data-id='"+data.productsSell[i]._id+"'>x 1</p><p class='col-lg-2 col-md-2 col-sm-2 col-xs-3 productPrice' data-id='"+data.productsSell[i]._id+"'>$"+data.productsSell[i].productPrice+"<button type='button' class='close' id='removeProduct' data-id='"+data.productsSell[i]._id+"'>&times;</button></p></div>");
           } else {
-            console.log("duplicate");
             register.duplicateProduct(data.productsSell[i]._id, true);
           }
           register.receipt.push(data.productsSell[i]._id);
@@ -179,16 +172,24 @@ var register={
     $(".modal-header").append("<a type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</a>");
     $(".modal-header").append("<h4 class='modal-title'>Payment</h4>");
     $(".modal-body").append("<div class='row' id='modalBodyTotal'></div>");
-    $("#modalBodyTotal").append("<div class='col-lg-4' id='amount'><h1>$"+register.total+"</h1></div>");
-    $("#modalBodyTotal").append("<div class='col-lg-8'><label for='payInput' class='col-lg-4 control-label'>Amount</label><div class='col-lg-6'><input id='payInput' class='form-control' type='integer'></div></div>");
-    $(".modal-footer").append("<a href='#' class='btn btn-primary col-lg-4' id='paymentTotal'>Pay</a><h4>Say thanks</h4>");
+    $("#modalBodyTotal").append("<div class='col-lg-4 col-md-4 col-sm-2 col-xs-10 text-center' id='amount'><h1>$"+register.total+"</h1></div>");
+    $("#modalBodyTotal").append("<div class='col-lg-8 col-md-8 col-sm-10 col-xs-12' id='modalInput'><label for='payInput' class='col-lg-2 col-md-2 col-sm-2 col-xs-3 control-label'>Amount</label><div class='col-lg-10 col-md-10 col-sm-10 col-xs-9'><input id='payInput' class='form-control' type='integer'></div></div>");
+    $(".modal-footer").append("<a href='#' class='btn btn-primary col-lg-4 col-md-4 col-sm-4 col-xs-4' id='paymentTotal'>Pay</a><h4>Say thanks</h4>");
+  },
+
+  modalEmail: function(){
+    $(".modal-title").html("Ticket");
+    $("#modalInput").html("<label for='emailInput' class='col-lg-2 control-label'>Email</label><div class='col-lg-10'><input id='emailInput' class='form-control' type='integer'></div>");
+    $(".modal-footer").html("<a href='#' class='btn btn-primary col-lg-4 col-md-4 col-sm-4 col-xs-4' id='sendButton'>Send</a><h4>Say thanks</h4>");
   },
 
   paymentReady: function(){
     var usingTable=false;
     if (register.tableAccount===0){
     register.createReceipt(usingTable);
+    register.modalEmail();
     } else if (register.tableAccount===1){
+    register.modalEmail();
     register.updateReceipt(usingTable);
     }
   }
@@ -216,8 +217,6 @@ $(document).on("click", "#createTable", function() {
       register.customerName=$("#customerName").val();
       register.createReceipt(usingTable);
     });
-  } else if (register.tableAccount===1){
-    console.log("trying to update receipt");
   }
 });
 
@@ -231,14 +230,12 @@ $(document).on("click", "#categories", function() {
 });
 
 $(document).on("click", "#removeProduct", function() {
-  console.log("remove product press");
   var thisId=$(this).attr("data-id");
   var minusProduct=$(".receiptRow").filter("[data-id='"+thisId+"']").attr("data-price");
   var getQuantity=$(".quantityProduct").filter("[data-id='"+thisId+"']").attr("data-quantity");
   var minusTotal=minusProduct/getQuantity;
   var minusProductTotal=minusProduct-minusTotal;
   var minusQuantity=getQuantity-1;
-  console.log("minus " + minusTotal);
   register.total=register.total-minusTotal;
   if (minusQuantity===0){
     $(".receiptRow").filter("[data-id='"+thisId+"']").remove();
@@ -271,23 +268,32 @@ $(document).on("click", "#product", function() {
   }
 });
 
+$(document).on("click", "#sendButton", function(){
+  var email=$("#emailInput").val();
+  var sendEmail={ receiptID: register.receiptID,
+                  email: email};
+  $.ajax({method: "POST",
+    url: "/emailReceipt",
+    data: sendEmail
+          }).done(function(data) {
+            $('#payModal').modal('hide');
+    });
+});
+
 $(document).on("click", "#paymentTotal", function(){
   var payment=$("#payInput").val();
-  console.log("payment: "+payment);
   register.temporalTotal=register.temporalTotal-payment;
   if(register.temporalTotal===0){
+    $("#amount").html("");
     register.paymentReady();
-    $('#payModal').modal('hide');
     register.temporalTotal=0;
   } else if (register.total<payment || register.temporalTotal<0){
-    console.log("Change: " +register.temporalTotal);
     var change=Math.abs(register.temporalTotal);
-    $("#modalBodyTotal").html("<div class='col-lg-12'><h1> Change: $"+change+"</h1></div>");
+    $("#amount").html("<h1> Change: $"+change+"</h1>");
     $(".modal-footer").html("<h4>Say thanks</h4>");
     register.temporalTotal=0;
     register.paymentReady();
   } else if (register.total>payment || register.temporalTotal>0){
-    console.log("Remain: " +register.temporalTotal);
     var remain=Math.abs(register.temporalTotal);
     $("#payInput").val("");
     $("#amount").html("<h1>Remain: $"+remain+"</h1>");

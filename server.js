@@ -9,9 +9,7 @@ var logger = require("morgan");
 var mongoose = require("mongoose");
 var passport = require("passport");
 var cookieParser = require("cookie-parser");
-
 require('./passport.js')(passport);
-
 
 // Mongoose mpromise deprecated - use bluebird promises
 var Promise = require("bluebird");
@@ -43,7 +41,7 @@ app.set('view engine', 'handlebars');
 //Database configuration with mongoose
 //"mongodb://localhost/antique"
 //"mongodb://heroku_tkb9q367:47puamlbi6s6ge5hrocosore7h@ds117839.mlab.com:17839/heroku_tkb9q367"
-mongoose.connect("mongodb://localhost/antique");
+mongoose.connect("mongodb://heroku_tkb9q367:47puamlbi6s6ge5hrocosore7h@ds117839.mlab.com:17839/heroku_tkb9q367");
 var db = mongoose.connection;
 
 // Show any mongoose errors

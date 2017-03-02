@@ -11,7 +11,7 @@ var ReceiptSchema = new Schema({
   // Date for receipt is a required string
   date: {
     type: Date,
-    default: Date.now
+    default: Date.now()
   },
   //Is it an active table
   activeTable: {

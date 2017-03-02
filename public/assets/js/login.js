@@ -12,7 +12,6 @@ $(document).on("click", "#loginButton", function(){
     }
   })
   .done(function(data){
-    console.log(data);
     if (typeof(data.redirect) == 'string'){
         window.location = data.redirect;
     }
